@@ -60,7 +60,7 @@ def ia_decide_action(question):
             model="openai/gpt-oss-120b",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
-            max_tokens=10,
+            max_tokens=100,
         )
 
         decision = response.choices[0].message.content.strip().upper()

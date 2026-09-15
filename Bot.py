@@ -57,7 +57,7 @@ def ia_decide_action(question):
             base_url="https://api.groq.com/openai/v1",
         )
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
             max_tokens=10,
@@ -76,7 +76,7 @@ def ia_decide_action(question):
         elif "invalid_api_key" in error_message:
             return "CLE_INVALIDE"
         else:
-            print(f"⚠️ Erreur IA décision: {e}")
+            print(f"Erreur IA décision: {e}")
             return "ERREUR_IA"
 
 
@@ -239,14 +239,14 @@ def demander_a_ia(question):
         error_message = str(e).lower()
 
         if "rate_limit" in error_message or "quota" in error_message:
-            return "❌ **Quota dépassé**\n\nLe service IA a atteint sa limite quotidienne de tokens.\nVeuillez réessayer plus tard ou contacter le développeur."
+            return "**Quota dépassé**\n\nLe service IA a atteint sa limite quotidienne de tokens.\nVeuillez réessayer plus tard ou contacter le développeur."
         elif "insufficient_quota" in error_message:
-            return "❌ **Quota dépassé**\n\nLe service IA a atteint sa limite quotidienne de tokens.\nVeuillez réessayer plus tard ou contacter le développeur."
+            return "**Quota dépassé**\n\nLe service IA a atteint sa limite quotidienne de tokens.\nVeuillez réessayer plus tard ou contacter le développeur."
         elif "invalid_api_key" in error_message:
-            return "❌ **Erreur de configuration**\n\nLa clé API est invalide. Contactez le développeur."
+            return "**Erreur de configuration**\n\nLa clé API est invalide. Contactez le développeur."
         else:
-            print(f"⚠️ Erreur IA réponse: {e}")
-            return f"❌ **Erreur technique**\n\nUne erreur s'est produite lors du traitement de votre demande.\nDétails: {str(e)}"
+            print(f" Erreur IA réponse: {e}")
+            return f" **Erreur technique**\n\nUne erreur s'est produite lors du traitement de votre demande.\nDétails: {str(e)}"
 
 
 def chercher_sur_serpapi(question_utilisateur, lat=None, long=None):
@@ -320,7 +320,7 @@ async def reponse_a_afficher(update, question, lat=None, long=None):
                 try:
                     await update.message.reply_photo(photo=url_image, caption=texte)
                 except Exception as e:
-                    print(f"⚠️ Erreur photo: {e}")
+                    print(f" Erreur photo: {e}")
                     await update.message.reply_text(texte)
             else:
                 await update.message.reply_text(texte)
@@ -341,9 +341,9 @@ async def gestion_message(update, context):
     # Gérer les erreurs de l'IA
     if decision == "QUOTA_DEPASSE":
         await update.message.reply_text(
-            "❌ **Service temporairement indisponible**\n\n"
+            " **Service temporairement indisponible**\n\n"
             "Le quota de l'IA est épuisé pour aujourd'hui.\n"
-            "Veuillez réessayer plus tard. 🙏"
+            "Veuillez réessayer plus tard. "
         )
         return
 
@@ -398,7 +398,7 @@ async def erreur(update, context):
 
 if __name__ == "__main__":
     app = Application.builder().token(token).build()
-    print("Bot Lancé ✅")
+    print("Bot Lancé ")
     # commandes
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("aide", aide))

@@ -41,11 +41,11 @@ Avant de commencer, assurez-vous de disposer des éléments suivants :
 ### 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/VOTRE_USERNAME/bot-touriste-ci.git
+git clone https://github.com/edgary225/bot-touriste-ci.git
 cd bot-touriste-ci
 ```
 
-Remplacez `VOTRE_USERNAME` par votre nom d'utilisateur GitHub.
+
 
 ### 2. Créer un environnement virtuel
 

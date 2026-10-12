@@ -1,3 +1,7 @@
+
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from threading import Thread
+
 import os
 import json
 import requests
@@ -397,16 +401,40 @@ async def erreur(update, context):
             print(f"Impossible d'envoyer le message d'erreur: {e}")
 
 
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.end_headers()
+        self.wfile.write(
+            "CI Tourist Guide Bot est opérationnel".encode("utf-8")
+        )
+
+    def log_message(self, format, *args):
+        pass
+
+
+def lancer_serveur_web():
+    port = int(os.environ.get("PORT", "10000"))
+    serveur = ThreadingHTTPServer(("0.0.0.0", port), HealthHandler)
+    print(f"Serveur HTTP démarré sur le port {port}")
+    serveur.serve_forever()
+
+
 if __name__ == "__main__":
+    # démarrer le serveur HTTP pour render
+    Thread(target=lancer_serveur_web, daemon=True).start()
+
     app = Application.builder().token(token).build()
-    print("Bot Lancé ")
+    print("Bot lancé")
+
     # commandes
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("aide", aide))
     app.add_handler(CommandHandler("about", about))
     app.add_handler(CommandHandler("localisation", localisation))
 
-    # gestion des messages texte
+    # gestion des messages
     app.add_handler(MessageHandler(filters.LOCATION, recevoir_localisation))
     app.add_handler(MessageHandler(filters.TEXT, gestion_message))
 
@@ -414,3 +442,5 @@ if __name__ == "__main__":
     app.add_error_handler(erreur)
 
     app.run_polling(poll_interval=5)
+
+
